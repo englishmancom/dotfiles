@@ -1,0 +1,1365 @@
+SPECTRWM(1)                 General Commands Manual                SPECTRWM(1)
+
+NNAAMMEE
+     ssppeeccttrrwwmm - window manager for X11
+
+SSYYNNOOPPSSIISS
+     ssppeeccttrrwwmm [--cc _f_i_l_e] [--vv]
+
+OOPPTTIIOONNSS
+     --cc _f_i_l_e
+             Specify a configuration file to load instead of scanning for one.
+
+     --dd      Enable debug mode and logging to stderr.
+
+     --vv      Print version and exit.
+
+DDEESSCCRRIIPPTTIIOONN
+     ssppeeccttrrwwmm is a minimalistic window manager that tries to stay out of the
+     way so that valuable screen real estate can be used for much more
+     important stuff.  It has sane defaults and does not require one to learn
+     a language to do any configuration.  It was written by hackers for
+     hackers and it strives to be small, compact and fast.
+
+     When ssppeeccttrrwwmm starts up, it reads settings from its configuration file,
+     _s_p_e_c_t_r_w_m_._c_o_n_f.  See the _C_O_N_F_I_G_U_R_A_T_I_O_N _F_I_L_E_S section below.
+
+     The following notation is used throughout this page:
+
+           MM       Meta
+           SS       Shift
+           <NNaammee>  Named key or button
+
+     ssppeeccttrrwwmm is very simple in its use.  Most of the actions are initiated
+     via key or pointer button bindings.  See the _B_I_N_D_I_N_G_S section below for
+     defaults and customizations.
+
+CCOONNFFIIGGUURRAATTIIOONN FFIILLEESS
+     ssppeeccttrrwwmm looks for the user-configuration file in the following order:
+
+           1.   _$_X_D_G___C_O_N_F_I_G___H_O_M_E_/_s_p_e_c_t_r_w_m_/_s_p_e_c_t_r_w_m_._c_o_n_f
+           2.   _~_/_._c_o_n_f_i_g_/_s_p_e_c_t_r_w_m_/_s_p_e_c_t_r_w_m_._c_o_n_f (if _$_X_D_G___C_O_N_F_I_G___H_O_M_E is
+                either not set or empty)
+           3.   _~_/_._s_p_e_c_t_r_w_m_._c_o_n_f.
+
+     If the user-configuration file is not found, ssppeeccttrrwwmm then looks for the
+     global configuration file in the following order:
+
+           1.   _$_X_D_G___C_O_N_F_I_G___D_I_R_S_/_s_p_e_c_t_r_w_m_/_s_p_e_c_t_r_w_m_._c_o_n_f (each colon-separated
+                directory in _$_X_D_G___C_O_N_F_I_G___D_I_R_S)
+           2.   _/_e_t_c_/_x_d_g_/_s_p_e_c_t_r_w_m_/_s_p_e_c_t_r_w_m_._c_o_n_f (if _$_X_D_G___C_O_N_F_I_G___D_I_R_S is either
+                not set or empty)
+           3.   _/_e_t_c_/_s_p_e_c_t_r_w_m_._c_o_n_f
+
+     The format of the file is
+
+           _k_e_y_w_o_r_d = _s_e_t_t_i_n_g
+
+     For example:
+
+           color_focus = red
+
+     Enabling or disabling an option is done by using 1 or 0 respectively.
+
+     Colors need to be specified per the XQueryColor(3) specification.  In
+     addition, alpha transparency may be specified via the format
+     rbga:_r_e_d/_g_r_e_e_n/_b_l_u_e/_a_l_p_h_a (8-bit hex values) For example, to specify a
+     50% transparent blue status bar background:
+
+           bar_color = rgba:00/00/ff/7f
+
+     Note that a compositing manager is required for alpha transparency.
+
+     Mark option values may be wrapped in single/double quotes to prevent
+     whitespace trimming, specify empty strings, etc.  Literal quote/backslash
+     characters can be escaped with a backslash `\', when needed.
+
+     Comments begin with a #.  When a literal `#' is desired in an option,
+     then it must be escaped with a backslash, i.e. \#
+
+     The file supports the following keywords:
+
+     aauuttoorruunn
+         Launch an application in a specified workspace at start-of-day.
+         Defined in the format ws[_i_d_x]:_a_p_p_l_i_c_a_t_i_o_n, e.g. ws[2]:xterm launches
+         an xterm(1) in workspace 2.  Specify `ws[-1]' to launch applications
+         such as desktop managers and panels in free mode to keep them always
+         mapped.
+
+         Note that _l_i_b_s_w_m_h_a_c_k_._s_o is required for "spawn-in-workspace"
+         behavior.  See the _S_W_M_H_A_C_K section below for more information, tips,
+         and workarounds if a program fails to spawn in the specified
+         workspace.
+
+     bbaarr__aaccttiioonn
+         External script that populates additional information in the status
+         bar, such as battery life.
+
+     bbaarr__aaccttiioonn__eexxppaanndd
+         Process bbaarr__ffoorrmmaatt character sequences in bbaarr__aaccttiioonn output; default
+         is 0.
+
+     bbaarr__aatt__bboottttoomm
+         Place the statusbar at the bottom of each region instead of the top.
+         Default is 0.
+
+     bbaarr__bboorrddeerr[_x]
+         Border color of status bar(s) on screen number _x.  Default is
+         rgb:00/80/80.
+
+     bbaarr__bboorrddeerr__ffrreeee[_x]
+         Border color of a status bar for a focused region on screen number _x
+         when a workspace-free window is focused.  Default is rgb:80/80/00.
+
+     bbaarr__bboorrddeerr__uunnffooccuuss[_x]
+         Border color of status bar(s) for unfocused region(s) on screen
+         number _x.  Default is rgb:00/40/40.
+
+     bbaarr__bboorrddeerr__wwiiddtthh
+         Set status bar border thickness in pixels.  Disable border by setting
+         to 0.
+
+     bbaarr__ccoolloorr[_x]
+         Background color of status bar(s) on screen number _x.
+
+         A comma separated list of up to 10 colors can be specified.  The
+         first value is used as the default background color.  Any of these
+         colors can then be selected as a background color in the status bar
+         through the use of the markup sequence ++@@bbgg==nn;; where n is between 0
+         and 9.
+
+     bbaarr__ccoolloorr__ffrreeee[_x]
+         Background color of a status bar for a focused region on screen
+         number _x when a workspace-free window is focused.
+
+         A comma separated list of up to 10 colors can be specified, with the
+         same syntax and behavior as bbaarr__ccoolloorr.  Default is rgb:40/40/00.
+
+     bbaarr__ccoolloorr__sseelleecctteedd[_x]
+         Background color for selected mmeennuu items on screen number _x.
+         Defaults to the value of bbaarr__bboorrddeerr.
+
+     bbaarr__ccoolloorr__uunnffooccuuss[_x]
+         Background color of status bar(s) for unfocused region(s) on screen
+         number _x.
+
+         A comma separated list of up to 10 colors can be specified, with the
+         same syntax and behavior as bbaarr__ccoolloorr for unfocused bar(s).  Defaults
+         to the value of bbaarr__ccoolloorr.
+
+     bbaarr__eennaabblleedd
+         Set default bbaarr__ttooggggllee state; default is 1.
+
+     bbaarr__eennaabblleedd__wwss[_x]
+         Set default bbaarr__ttooggggllee__wwss state on workspace _x; default is 1.
+
+     bbaarr__ffoonntt
+         Fonts used in the status bar.  Either Xft or X Logical Font
+         Description (XLFD) may be used to specify fonts.  Fallback fonts may
+         be specified by separating each font with a comma.  If all entries
+         are in XLFD syntax, font set will be used.  If at least one entry is
+         Xft, Xft will be used.
+
+         The default is to use font set.
+
+         If Xft is used, a comma-separated list of up to 10 fonts can be
+         specified.  The first entry is the default font.  Any font defined
+         here can then be selected in the status bar through the use of the
+         markup sequence ++@@ffnn==nn;; where n is between 0 and 9.
+
+         Also note that dmenu(1) prior to 4.6 does not support Xft fonts.
+
+         Xft examples:
+
+               bar_font = Terminus:style=Regular:pixelsize=14:antialias=true
+
+               bar_font = -*-profont-medium-*-*-*-11-*-*-*-*-*-*-*,Terminus:pixelsize=14,-*-clean-medium-*-*-*-12-*-*-*-*-*-*-*
+
+         Font set examples:
+
+               bar_font = -*-terminus-medium-*-*-*-14-*-*-*-*-*-*-*
+
+               bar_font = -*-profont-medium-*-*-*-11-*-*-*-*-*-*-*,-*-terminus-medium-*-*-*-14-*-*-*-*-*-*-*,-*-clean-medium-*-*-*-12-*-*-*-*-*-*-*
+
+         To list the available fonts in your system see fc-list(1) or
+         xlsfonts(1) manpages.  The xfontsel(1) application can help with the
+         XLFD setting.
+
+     bbaarr__ffoonntt__ccoolloorr[_x]
+         Foreground color of the status bar(s) on screen number _x.
+
+         A comma separated list of up to 10 colors can be specified.  The
+         first value is used as the default foreground color.  Any of these
+         colors can then be selected as a foreground color in the status bar
+         through the use of the markup sequence ++@@ffgg==nn;; where n is between 0
+         and 9.
+
+     bbaarr__ffoonntt__ccoolloorr__uunnffooccuuss[_x]
+         Foreground color of status bar(s) for unfocused region(s) on screen
+         number _x.
+
+         A comma separated list of up to 10 colors can be specified, with the
+         same syntax and behavior as bbaarr__ffoonntt__ccoolloorr for unfocused bar(s).
+         Defaults to the value of bbaarr__ffoonntt__ccoolloorr.
+
+     bbaarr__ffoonntt__ccoolloorr__sseelleecctteedd[_x]
+         Foreground color for selected mmeennuu items on screen number _x.
+         Defaults to the value of bbaarr__ccoolloorr.
+
+     bbaarr__ffoonntt__ppuuaa
+         Specify a font to override the Unicode Private Use Area code points
+         (U+E000 -> U+F8FF, U+F0000 -> U+FFFFD, U+100000 -> U+10FFFD).  Some
+         fonts use these code points to provide special icon glyphs.
+         Available only with Xft fonts.
+
+     bbaarr__ffoorrmmaatt
+         Set the bar format string, overriding cclloocckk__ffoorrmmaatt and all of the
+         eennaabblleedd options.  The format is passed through strftime(3) before
+         being used.  It may contain the following character sequences:
+
+               CChhaarraacctteerr sseeqquueennccee    RReeppllaacceedd wwiitthh
+               +<                    Pad with a space
+               +A                    Output of the external script
+               +C                    Window class (from WM_CLASS)
+               +D                    Workspace name
+               +F                    Focus status indicator
+               +I                    Workspace index
+               +L                    Workspace list indicator
+               +M                    Number of iconic (minimized) windows in
+                                     workspace
+               +N                    Screen number
+               +P                    Window class and instance separated by a
+                                     colon
+               +R                    Region index
+               +S                    Stacking algorithm
+               +T                    Window instance (from WM_CLASS)
+               +U                    Urgency hint
+               +V                    Program version
+               +w                    Number of windows in workspace
+               +W                    Window name (from _NET_WM_NAME/WM_NAME)
+               +|[weight][justify]   Begin new section and reset markup
+                                     sequence effects.
+
+                                     wweeiigghhtt is a positive integer used to
+                                     allocate horizontal space between 'L',
+                                     'C' and 'R' sections (see justify).  The
+                                     default weight is 1.
+
+                                     jjuussttiiffyy can have the value L, C, R or T.
+                                     L, C, R are for left, center and right
+                                     justified sections respectively.  A 'T'
+                                     section will limit its space usage to fit
+                                     to the text.  If no value is specified
+                                     for a given section, the setting from
+                                     bbaarr__jjuussttiiffyy is used.
+               ++                    A literal `+'
+               +@                    Prefix for text markup sequences
+
+         The currently recognized text markup sequences are:
+
+               CChhaarraacctteerr sseeqquueennccee    AAccttiioonn
+               +@fn=n;               Selects font n (from 0 to 9) from
+                                     bbaarr__ffoonntt.
+               +@fg=n;               Selects foreground color n (from 0 to 9)
+                                     from bbaarr__ffoonntt__ccoolloorr.
+               +@bg=n;               Selects background color n (from 0 to 9)
+                                     from bbaarr__ccoolloorr.
+               +@stp;                Stops the interpretation of markup
+                                     sequences. Any markup sequence found
+                                     after +@stp will appear as normal
+                                     characters in the status bar.
+
+         Note that markup sequences in bbaarr__aaccttiioonn script output will only be
+         processed if bbaarr__aaccttiioonn__eexxppaanndd is enabled.
+
+         All character sequences may limit its output to a specific length,
+         for example +64A.  By default, no padding/alignment is done in case
+         the length of the replaced string is less than the specified length
+         (64 in the example).  The padding/alignment can be enabled using a
+         '_' character in the sequence.  For example: +_64W, +64_W and +_64_W
+         enable padding before (right alignment), after (left alignment), and
+         both before and after (center alignment) window name, respectively.
+         Any characters that do not match the specification are copied as-is.
+
+     bbaarr__jjuussttiiffyy
+         Justify the status bar text.  Possible values are _l_e_f_t, _c_e_n_t_e_r, and
+         _r_i_g_h_t.
+
+         Note that if the output is not left justified, it may not be properly
+         aligned in some circumstances, due to the white-spaces in the default
+         static format.  See the bbaarr__ffoorrmmaatt option for more details.
+
+     bbiinndd[_x]
+         Bind key or button combo to action _x.  See the _B_I_N_D_I_N_G_S section
+         below.
+
+     bboorrddeerr__wwiiddtthh
+         Set window border thickness in pixels.  Disable all borders by
+         setting to 0.
+
+     bboouunnddaarryy__wwiiddtthh
+         Set region containment boundary width in pixels.  This is how far a
+         window must be dragged/resized (with the pointer) beyond the region
+         edge before it is allowed outside the region.  Disable the window
+         containment effect by setting to 0.
+
+     ccaanncceellkkeeyy
+         Change the key used as an alternative means of terminating
+         move/resize operations.  Default is Escape.
+
+         See the _B_I_N_D_I_N_G_S section below for details on how to find key names.
+
+     cclliicckk__ttoo__rraaiissee
+         Enable or disable raising stacking priority when clicking on a
+         window.  Default is 1.
+
+     cclloocckk__eennaabblleedd
+         Enable or disable displaying the clock in the status bar.  Disable by
+         setting to 0 so a custom clock could be used in the bbaarr__aaccttiioonn
+         script.
+
+     ccoolloorr__ffooccuuss__ffrreeee
+         Border color of the currently focused window that is in free mode.
+         Default is yellow.
+
+     ccoolloorr__ffooccuuss__mmaaxxiimmiizzeedd__ffrreeee
+         Border color of the currently focused maximized window that is in
+         free mode.  Defaults to the value of ccoolloorr__ffooccuuss__ffrreeee.
+
+     ccoolloorr__uunnffooccuuss__ffrreeee
+         Border color of unfocused windows that are in free mode, default is
+         rgb:88/88/00.
+
+     ccoolloorr__uunnffooccuuss__mmaaxxiimmiizzeedd__ffrreeee
+         Border color of unfocused maximized windows that are in free mode.
+         Defaults to the value of ccoolloorr__uunnffooccuuss__ffrreeee.
+
+     ccoolloorr__ffooccuuss
+         Border color of the currently focused window.  Default is red.
+
+     ccoolloorr__ffooccuuss__mmaaxxiimmiizzeedd
+         Border color of the currently focused, maximized window.  Defaults to
+         the value of ccoolloorr__ffooccuuss.
+
+     ccoolloorr__uunnffooccuuss
+         Border color of unfocused windows, default is rgb:88/88/88.
+
+     ccoolloorr__uunnffooccuuss__mmaaxxiimmiizzeedd
+         Border color of unfocused, maximized windows.  Defaults to the value
+         of ccoolloorr__uunnffooccuuss.
+
+     ccyyccllee__vviissiibbllee
+         Include workspaces that are mapped when switching with wwss__nneexxtt,
+         wwss__pprreevv, wwss__nneexxtt__aallll, wwss__pprreevv__aallll, wwss__nneexxtt__mmoovvee, or wwss__pprreevv__mmoovvee.
+         Enable by setting to 1.
+
+         Note that mapped workspaces will be swapped unless wwoorrkkssppaaccee__ccllaammpp is
+         enabled.  If wwaarrpp__ffooccuuss is also enabled, focus will go to the region
+         where the workspace is mapped.
+
+     ddiiaalloogg__rraattiioo
+         Some applications have dialogue windows that are too small to be
+         useful.  This ratio adjusts the window/region size ratio for
+         transient windows having the TRANSSZ quirk.  For example, 0.6 is 60%
+         of the the monitor size if the current region spans the monitor.
+
+     ddiissaabbllee__bboorrddeerr
+         Remove border when bar is disabled and there is only one window on
+         the region.  Enable by setting to 1.  Setting this to _a_l_w_a_y_s removes
+         the border regardless of the bar being enabled/disabled.  Defaults to
+         0.
+
+     ffooccuuss__cclloossee
+         Window to put focus when the focused window is closed.  Possible
+         values are _f_i_r_s_t, _n_e_x_t, _p_r_e_v_i_o_u_s (default), _l_a_s_t and _p_r_i_o_r.  _n_e_x_t and
+         _p_r_e_v_i_o_u_s are relative to the window that is closed.  _p_r_i_o_r is the
+         last focused window in the workspace.
+
+     ffooccuuss__cclloossee__wwrraapp
+         Whether to allow the focus to jump to the last window when the first
+         window is closed or vice versa.  Disable by setting to 0.
+
+     ffooccuuss__ddeeffaauulltt
+         Window to put focus when no window has been focused.  Possible values
+         are _f_i_r_s_t and _l_a_s_t (default).
+
+     ffooccuuss__mmaarrkk__nnoonnee
+         Set the bbaarr__ffoorrmmaatt focus status indicator (+F) string to substitute
+         when no window is focused.  Default is ''.
+
+     ffooccuuss__mmaarrkk__nnoorrmmaall
+         Set the bbaarr__ffoorrmmaatt focus status indicator (+F) string to substitute
+         when a normal (not floating, maximized or free) window is focused.
+         Default is ''.
+
+     ffooccuuss__mmaarrkk__ffllooaattiinngg
+         Set the bbaarr__ffoorrmmaatt focus status indicator (+F) string to substitute
+         when a floating window is focused.  Default is '(f)'.
+
+     ffooccuuss__mmaarrkk__ffrreeee
+         Set the bbaarr__ffoorrmmaatt focus status indicator (+F) string to substitute
+         when a window that is in free mode is focused.  Default is '(*)'.
+
+     ffooccuuss__mmaarrkk__mmaaxxiimmiizzeedd
+         Set the bbaarr__ffoorrmmaatt focus status indicator (+F) string to substitute
+         when a maximized window is focused.  Default is '(m)'.
+
+     ffooccuuss__mmooddee
+         Window focus behavior with respect to the pointer.  Possible values:
+
+               _d_e_f_a_u_l_t  Set window focus on border crossings caused by cursor
+                        motion and window interaction.
+               _f_o_l_l_o_w   Set window focus on all cursor border crossings,
+                        including workspace switches and changes to layout.
+               _m_a_n_u_a_l   Set window focus on window interaction only.
+
+     ffuullllssccrreeeenn__hhiiddee__ootthheerr
+         When a fullscreen window is focused and not in bbeellooww state, hide
+         unrelated windows in the same workspace.  Useful for transparent
+         windows.  Defaults to 0.
+
+     ffuullllssccrreeeenn__uunnffooccuuss
+         Set handling when a fullscreen window loses focus.  Possible values:
+
+               _n_o_n_e            Leave window fullscreen.  (default)
+               _r_e_s_t_o_r_e         Exit fullscreen.
+               _i_c_o_n_i_f_y         Minimize/hide the window.
+               _f_l_o_a_t           Exit fullscreen and float window.
+               _b_e_l_o_w           Set bbeellooww state on the window.
+               _q_u_i_c_k___b_e_l_o_w     Set bbeellooww state on the window, unset when
+                               refocused.
+
+         Note that this option is ignored in max layout.
+
+     iiccoonniicc__eennaabblleedd
+         Display the number of iconic (minimized) windows in the status bar.
+         Enable by setting to 1.
+
+     kkeeyybbooaarrdd__mmaappppiinngg
+         Clear all key bindings (not button bindings) and load new bindings
+         from the specified file.  This allows you to load pre-defined key
+         bindings for your keyboard layout.  See the _K_E_Y_B_O_A_R_D _M_A_P_P_I_N_G _F_I_L_E_S
+         section below for a list of keyboard mapping files that have been
+         provided for several keyboard layouts.
+
+         Note that _/_d_e_v_/_n_u_l_l can be specified if you only want to clear
+         bindings.
+
+     llaayyoouutt
+         Select layout to use at start-of-day.  Defined in the format
+         ws[_i_d_x]:_m_a_s_t_e_r___g_r_o_w:_m_a_s_t_e_r___a_d_d:_s_t_a_c_k___i_n_c:_a_l_w_a_y_s___r_a_i_s_e:_s_t_a_c_k___m_o_d_e,
+         e.g. ws[2]:-4:0:1:0:horizontal sets workspace 2 to the horizontal
+         stack mode, shrinks the master area by 4 ticks and adds one window to
+         the stack, while maintaining default floating window behavior.
+         Possible _s_t_a_c_k___m_o_d_e values are _v_e_r_t_i_c_a_l, _v_e_r_t_i_c_a_l___f_l_i_p, _h_o_r_i_z_o_n_t_a_l,
+         _h_o_r_i_z_o_n_t_a_l___f_l_i_p, _m_a_x and _f_l_o_a_t_i_n_g.
+
+         See mmaasstteerr__ggrrooww, mmaasstteerr__sshhrriinnkk, mmaasstteerr__aadddd, mmaasstteerr__ddeell, ssttaacckk__iinncc,
+         ssttaacckk__ddeecc, ssttaacckk__bbaallaannccee, and aallwwaayyss__rraaiissee for more information.
+         Note that the stacking options are complicated and have side-effects.
+         One should familiarize oneself with these commands before
+         experimenting with the llaayyoouutt option.
+
+         This setting is not retained at restart.
+
+     mmaaxx__llaayyoouutt__mmaaxxiimmiizzee
+         Automatically maximize windows in max layout.  Note that automatic
+         maximize behavior is disabled for windows that are unmaximized in max
+         layout.  Maximizing the window or resetting the layout with
+         ssttaacckk__rreesseett enables it again.  Enabled by default.  Disable by
+         setting to 0.
+
+     mmaaxxiimmiizzee__hhiiddee__bbaarr
+         When set to 1, mmaaxxiimmiizzee__ttooggggllee will also hide/restore the bar
+         visibility of the affected workspace.  Defaults to 0.
+
+     mmaaxxiimmiizzee__hhiiddee__ootthheerr
+         When a maximized window is focused and not in bbeellooww state, hide
+         unrelated windows in the same workspace.  Useful for transparent
+         windows.  Defaults to 0.
+
+     mmaaxxiimmiizzeedd__uunnffooccuuss
+         Set handling when a maximized window loses focus.  Possible values:
+
+               _n_o_n_e            Leave window maximized.
+               _r_e_s_t_o_r_e         Unmaximize window.  (default)
+               _i_c_o_n_i_f_y         Minimize/hide the window.
+               _f_l_o_a_t           Unmaximize and float window.
+               _b_e_l_o_w           Set bbeellooww state on the window.
+               _q_u_i_c_k___b_e_l_o_w     Set bbeellooww state on the window, unset when
+                               refocused.
+
+         Note that this option is ignored in max layout.
+
+     mmooddkkeeyy
+         Change the current modifier value of MMOODD in bbiinndd entries that come
+         later in the configuration file.  For existing bindings, the new
+         value is substituted for the previous value.  Possible values are
+         _M_o_d_1 (default), _M_o_d_2, _M_o_d_3, _M_o_d_4 and _M_o_d_5.
+
+         _M_o_d_1 is generally the Alt key, _M_o_d_2 is the Command key on macOS and
+         _M_o_d_4 is the Windows key on a PC.  The current modifier key mapping
+         can be found by running xmodmap(1).
+
+     nnaammee
+         Set the name of a workspace at start-of-day.  Defined in the format
+         ws[_i_d_x]:_n_a_m_e, e.g. ws[1]:Console sets the name of workspace 1 to
+         "Console".
+
+     pprrooggrraamm[_p]
+         Define new action to spawn a program _p.  See the _P_R_O_G_R_A_M_S section
+         below.
+
+     qquuiirrkk[_c[:_i[:_n]]]
+         Add "quirk" for windows with class _c, instance _i (optional) and name
+         _n (optional).  See the _Q_U_I_R_K_S section below.
+
+     rreeggiioonn
+         Allocates a custom region, removing any autodetected regions that
+         occupy the same space on the specified logical X screen number.
+         Defined in the format screen[_i_d_x]:_w_i_d_t_hx_h_e_i_g_h_t+_x+_y[,_r_o_t_a_t_i_o_n], e.g.
+         screen[1]:800x1200+0+0 or screen[1]:800x1200+0+0,inverted (with
+         optional rotation).
+
+         To make a region span multiple monitors, create a region big enough
+         to cover them all, e.g. screen[1]:2048x768+0+0 makes the region span
+         two monitors with 1024x768 resolution sitting one next to the other.
+
+         Possible values for the optional rotation argument are _n_o_r_m_a_l
+         (default), _l_e_f_t, _i_n_v_e_r_t_e_d and _r_i_g_h_t.  Note that rotation is used by
+         wwoorrkkssppaaccee__aauuttoorroottaattee.
+
+     rreeggiioonn__ppaaddddiinngg
+         Pixel width of empty space within region borders.  Disable by setting
+         to 0.
+
+     ssnnaapp__rraannggee
+         Set the distance in pixels a tiled/maximized window must be moved
+         (with the pointer) to unsnap and float freely.  Set to 0 to unsnap
+         immediately. Default is 25.
+
+     ssppaawwnn__ppoossiittiioonn
+         Position in stack to place newly spawned windows.  Possible values
+         are _f_i_r_s_t, _n_e_x_t, _p_r_e_v_i_o_u_s and _l_a_s_t (default).  _n_e_x_t and _p_r_e_v_i_o_u_s are
+         relative to the focused window.
+
+     ssttaacckk__eennaabblleedd
+         Enable or disable displaying the current stacking algorithm in the
+         status bar.
+
+     ssttaacckk__mmaarrkk__ffllooaattiinngg
+         Set the _f_l_o_a_t_i_n_g layout mark for the bbaarr__ffoorrmmaatt stacking indicator
+         (+S).  Default is '[~]'.
+
+     ssttaacckk__mmaarrkk__hhoorriizzoonnttaall
+         Set the _h_o_r_i_z_o_n_t_a_l layout mark for the bbaarr__ffoorrmmaatt stacking indicator
+         (+S).  Default is '[-]'.
+
+     ssttaacckk__mmaarrkk__hhoorriizzoonnttaall__fflliipp
+         Set the _h_o_r_i_z_o_n_t_a_l___f_l_i_p layout mark for the bbaarr__ffoorrmmaatt stacking
+         indicator (+S).  Default is '[v]'.
+
+     ssttaacckk__mmaarrkk__mmaaxx
+         Set the _m_a_x layout mark for the bbaarr__ffoorrmmaatt stacking indicator (+S).
+         Default is '[ ]'.
+
+     ssttaacckk__mmaarrkk__vveerrttiiccaall
+         Set the _v_e_r_t_i_c_a_l layout mark for the bbaarr__ffoorrmmaatt stacking indicator
+         (+S).  Default is '[|]'.
+
+     ssttaacckk__mmaarrkk__vveerrttiiccaall__fflliipp
+         Set the _v_e_r_t_i_c_a_l___f_l_i_p layout mark for the bbaarr__ffoorrmmaatt stacking
+         indicator (+S).  Default is '[>]'.
+
+     tteerrmm__wwiiddtthh
+         Set a preferred minimum width for the terminal.  If this value is
+         greater than 0, ssppeeccttrrwwmm will attempt to adjust the font sizes in the
+         terminal to keep the terminal width above this number as the window
+         is resized.  Only xterm(1) is currently supported.  The xterm(1)
+         binary must not be setuid or setgid, which it is by default on most
+         systems.  Users may need to set program[term] (see the _P_R_O_G_R_A_M_S
+         section) to use an alternate copy of the xterm(1) binary without the
+         setgid bit set.
+
+     ttiillee__ggaapp
+         Pixel width of empty space between tiled windows.  Negative values
+         cause overlap.  Set this to the opposite of bboorrddeerr__wwiiddtthh to collapse
+         the border between tiles.  Disable by setting to 0.
+
+     uurrggeenntt__ccoollllaappssee
+         Minimizes the space consumed by the urgency hint indicator by
+         removing the placeholders for non-urgent workspaces, the trailing
+         space when there are urgent windows and the default leading space.
+         Enable by setting to 1.
+
+     uurrggeenntt__eennaabblleedd
+         Enable or disable the urgency hint indicator in the status bar.  Note
+         that many terminal emulators require an explicit setting for the bell
+         character to trigger urgency on the window.  In xterm(1), for
+         example, one needs to add the following line to _._X_d_e_f_a_u_l_t_s:
+
+               xterm.bellIsUrgent: true
+
+     vveerrbboossee__llaayyoouutt
+         Enable or disable displaying the current master window count and
+         stack column/row count in the status bar.  Enable by setting to 1.
+         See _m_a_s_t_e_r___a_d_d, _m_a_s_t_e_r___d_e_l, _s_t_a_c_k___i_n_c and _s_t_a_c_k___d_e_c for more
+         information.
+
+     wwaarrpp__ffooccuuss
+         Focus on the target window/workspace/region when clamped.  For
+         example, when attempting to switch to a workspace that is mapped on
+         another region and _w_o_r_k_s_p_a_c_e___c_l_a_m_p is enabled, focus on the region
+         with the target workspace.  Enable by setting to 1.
+
+     wwaarrpp__ppooiinntteerr
+         Centers the pointer on the focused window when using bindings to
+         change focus, switch workspaces, change regions, etc.  Enable by
+         setting to 1.
+
+     wwiinnddooww__ccllaassss__eennaabblleedd
+         Enable or disable displaying the window class name (from WM_CLASS) in
+         the status bar.  Enable by setting to 1.
+
+     wwiinnddooww__iinnssttaannccee__eennaabblleedd
+         Enable or disable displaying the window instance name (from WM_CLASS)
+         in the status bar.  Enable by setting to 1.
+
+     wwiinnddooww__nnaammee__eennaabblleedd
+         Enable or disable displaying the window display name (from
+         _NET_WM_NAME/WM_NAME) in the status bar.  Enable by setting to 1.
+
+         To prevent excessively large window names from pushing the remaining
+         text off the bar, it is limited to 64 characters, by default.  See
+         the bbaarr__ffoorrmmaatt option for more details.
+
+     wwoorrkkssppaaccee__aauuttoorroottaattee
+         When moving workspaces across regions, auto-rotate
+         vertical/horizontal layouts based on rotation data from xrandr(1).
+         Enable by setting to 1.
+
+     wwoorrkkssppaaccee__ccllaammpp
+         Prevents workspaces from being swapped when attempting to switch to a
+         workspace that is mapped to another region.  Use _w_a_r_p___f_o_c_u_s if you
+         want to focus on the region containing the workspace and _w_a_r_p___p_o_i_n_t_e_r
+         if you want to also send the pointer.  Enable by setting to 1.
+
+     wwoorrkkssppaaccee__iinnddiiccaattoorr
+         Configure the status bar workspace indicator.  One or more of the
+         following options may be specified in a comma-separated list:
+
+               _l_i_s_t_c_u_r_r_e_n_t     Include the current workspace.
+               _l_i_s_t_a_c_t_i_v_e      Include workspaces with windows.
+               _l_i_s_t_e_m_p_t_y       Include empty workspaces.
+               _l_i_s_t_n_a_m_e_d       Include named workspaces.
+               _l_i_s_t_u_r_g_e_n_t      Include workspaces with urgent window(s).
+               _l_i_s_t_a_l_l         Include all workspaces.
+               _h_i_d_e_c_u_r_r_e_n_t     Always exclude the current workspace from the
+                               list.
+               _m_a_r_k_c_u_r_r_e_n_t     Indicate the current workspace if it is in the
+                               list.
+               _m_a_r_k_a_c_t_i_v_e      Indicate workspaces in the list that are
+                               active.
+               _m_a_r_k_e_m_p_t_y       Indicate workspaces in the list that are empty.
+               _m_a_r_k_u_r_g_e_n_t      Indicate workspaces in the list that contain
+                               urgent window(s).
+               _p_r_i_n_t_n_a_m_e_s      Display the names of named workspaces in the
+                               list.
+               _n_o_i_n_d_e_x_e_s       Hide the index of the workspaces.
+
+         The default is _l_i_s_t_c_u_r_r_e_n_t,_l_i_s_t_a_c_t_i_v_e,_m_a_r_k_c_u_r_r_e_n_t,_p_r_i_n_t_n_a_m_e_s
+
+         Note that markup sequences can be used to style the workspace
+         indicator.  For example, to change the color of the current
+         workspace:
+
+               workspace_mark_current = '+@fg=1;'
+               workspace_mark_current_suffix = '+@fg=0;'
+
+     wwoorrkkssppaaccee__lliimmiitt
+         Set the total number of workspaces available.  Minimum is 1, maximum
+         is 22, default is 10.
+
+     wwoorrkkssppaaccee__mmaarrkk__aaccttiivvee
+         Set the string inserted before active workspaces in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '^'.
+
+     wwoorrkkssppaaccee__mmaarrkk__aaccttiivvee__ssuuffffiixx
+         Set the string inserted after active workspaces in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '' (empty string).
+
+     wwoorrkkssppaaccee__mmaarrkk__ccuurrrreenntt
+         Set the string inserted before the current workspace in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '*'.
+
+     wwoorrkkssppaaccee__mmaarrkk__ccuurrrreenntt__ssuuffffiixx
+         Set the string inserted after the current workspace in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '' (empty string).
+
+     wwoorrkkssppaaccee__mmaarrkk__eemmppttyy
+         Set the string inserted before empty workspaces in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '-'.
+
+     wwoorrkkssppaaccee__mmaarrkk__eemmppttyy__ssuuffffiixx
+         Set the string inserted after empty workspaces in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '' (empty string).
+
+     wwoorrkkssppaaccee__mmaarrkk__uurrggeenntt
+         Set the string inserted before urgent workspaces in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '!'.
+
+     wwoorrkkssppaaccee__mmaarrkk__uurrggeenntt__ssuuffffiixx
+         Set the string inserted after urgent workspaces in the
+         wwoorrkkssppaaccee__iinnddiiccaattoorr.  Default is '' (empty string).
+
+SSTTAACCKK MMOODDEESS
+     vveerrttiiccaall            Master area is on the left and stack area is on the
+                         right.  Additional windows are vertically tiled in
+                         stack area.
+
+     vveerrttiiccaall fflliippppeedd    Same as above but stack and master areas are swapped.
+
+     hhoorriizzoonnttaall          Master area is on the top and stack area is on the
+                         bottom.  Additional windows are horizontally tiled in
+                         stack area.
+
+     hhoorriizzoonnttaall fflliippppeedd  Same as above but stack and master areas are swapped.
+
+     mmaaxx                 The focused window occupies the whole region, except
+                         for the bar (if enabled).
+
+     ffllooaattiinngg            Windows are untiled and can be resized and
+                         positioned.
+
+WWIINNDDOOWW SSTTAATTEESS
+     These can be set/unset by the corresponding ttooggggllee actions listed in the
+     _B_I_N_D_I_N_G_S section below.
+
+     ffllooaattiinngg    The window is stacked above others and is not in a tile; it
+                 may be freely resized and positioned.
+
+     bbeellooww       The window is floating, but stacked below others.
+
+     mmaaxxiimmiizzeedd   The window occupies the work area of the region (area that
+                 excludes space reserved by the bar, docks/panels, etc.)  By
+                 default, focusing another window removes the maximized state
+                 of the window.  See mmaaxxiimmiizzeedd__uunnffooccuuss to configure unfocused
+                 behavior.
+
+     ffuullllssccrreeeenn  The window occupies the whole region.  By default, focusing
+                 another window does not remove the fullscreen state of the
+                 window.  See ffuullllssccrreeeenn__uunnffooccuuss to configure unfocused
+                 behavior.
+
+     ffrreeee        The window is floating, but not bound by regions, workspaces
+                 or their layouts.  It is always mapped, unless iconified, and
+                 may be resized and positioned anywhere.
+
+PPRROOGGRRAAMMSS
+     ssppeeccttrrwwmm allows you to define custom actions to launch programs of your
+     choice and then bind them the same as with built-in actions.  See the
+     _B_I_N_D_I_N_G_S section below.
+
+     Custom programs in the configuration file are specified as follows:
+
+           program[_a_c_t_i_o_n] = _p_r_o_g_p_a_t_h [_a_r_g [_a_r_g _._._.]]
+
+     _a_c_t_i_o_n is any identifier that does not conflict with a built-in action or
+     keyword, _p_r_o_g_p_a_t_h is the desired program, and _a_r_g is zero or more
+     arguments to the program.
+
+     With the exception of '~' expansion, program calls are executed as-is
+     without any interpretation.  A shell can be called to execute shell
+     commands.  (e.g. sh -c 'command string').
+
+     Remember that when using `#' in your program call, it must be escaped
+     with a backslash, i.e. \#
+
+     The following argument variables are replaced with values at the time the
+     program is spawned:
+
+           $$bbaarr__bboorrddeerr
+           $$bbaarr__ccoolloorr
+           $$bbaarr__ccoolloorr__sseelleecctteedd
+           $$bbaarr__ffoonntt
+           $$bbaarr__ffoonntt__ccoolloorr
+           $$bbaarr__ffoonntt__ccoolloorr__sseelleecctteedd
+           $$ccoolloorr__ffooccuuss
+           $$ccoolloorr__uunnffooccuuss
+           $$ddmmeennuu__bboottttoomm    -b if bbaarr__aatt__bboottttoomm is enabled.
+           $$rreeggiioonn__iinnddeexx
+           $$wwoorrkkssppaaccee__iinnddeexx
+
+     Example:
+
+           program[ff] = /usr/local/bin/firefox http://spectrwm.org/
+           bind[ff] = MOD+Shift+b # Now M-S-b launches firefox
+
+     To cancel the previous, unbind it:
+
+           bind[] = MOD+Shift+b
+
+     Default programs:
+           tteerrmm             xterm
+           lloocckk             xlock
+           mmeennuu             dmenu_run $dmenu_bottom -fn $bar_font -nb
+                            $bar_color -nf $bar_font_color -sb
+                            $bar_color_selected -sf $bar_font_color_selected
+           sseeaarrcchh           dmenu $dmenu_bottom -i -fn $bar_font -nb
+                            $bar_color -nf $bar_font_color -sb
+                            $bar_color_selected -sf $bar_font_color_selected
+           nnaammee__wwoorrkkssppaaccee   dmenu $dmenu_bottom -p Workspace -fn $bar_font -nb
+                            $bar_color -nf $bar_font_color -sb
+                            $bar_color_selected -sf $bar_font_color_selected
+           iinniittssccrr          initscreen.sh        # optional
+           ssccrreeeennsshhoott__aallll   screenshot.sh full   # optional
+           ssccrreeeennsshhoott__wwiinndd  screenshot.sh window # optional
+
+     Note that optional default programs will not be validated unless
+     overridden.  If a default program fails validation, you can resolve the
+     exception by installing the program, modifying the program call or
+     disabling the program by freeing the respective binding.
+
+     For example, to override lloocckk:
+
+           program[lock] = xscreensaver-command -lock
+
+     To unbind lloocckk and prevent it from being validated:
+
+           bind[] = MOD+Shift+Delete
+
+     Note that when a program is spawned, ssppeeccttrrwwmm aims to place its windows
+     in its spawn workspace.  See the _S_W_M_H_A_C_K section below for more
+     information, tips, and workarounds if a program fails to spawn in the
+     correct workspace.
+
+BBIINNDDIINNGGSS
+     ssppeeccttrrwwmm provides many functions (or actions) accessed via key or pointer
+     button bindings.
+
+     The default bindings are listed below:
+
+           <BBuuttttoonn11>           focus
+           MM--<BBuuttttoonn11>         move
+           MM--<BBuuttttoonn33>         resize
+           MM--SS--<BBuuttttoonn33>       resize_centered
+           MM--SS--<RReettuurrnn>        term
+           MM--pp                 menu
+           MM--SS--qq               quit
+           MM--qq                 restart
+           <_u_n_b_o_u_n_d>           restart_of_day
+           MM--<SSppaaccee>           cycle_layout
+           MM--SS--\\               flip_layout
+           <_u_n_b_o_u_n_d>           prior_layout
+           <_u_n_b_o_u_n_d>           layout_vertical
+           <_u_n_b_o_u_n_d>           layout_horizontal
+           <_u_n_b_o_u_n_d>           layout_max
+           <_u_n_b_o_u_n_d>           layout_floating
+           MM--SS--<SSppaaccee>         stack_reset
+           <_u_n_b_o_u_n_d>           stack_balance
+           MM--hh                 master_shrink
+           MM--ll                 master_grow
+           MM--,,                 master_add
+           MM--..                 master_del
+           MM--SS--,,               stack_inc
+           MM--SS--..               stack_dec
+           MM--<RReettuurrnn>          swap_main
+           MM--jj, MM--<TTAABB>        focus_next
+           MM--kk, MM--SS--<TTAABB>      focus_prev
+           MM--mm                 focus_main
+           MM--``                 focus_free
+           MM--SS--aa               focus_prior
+           MM--uu                 focus_urgent
+           MM--SS--jj               swap_next
+           MM--SS--kk               swap_prev
+           MM--bb                 bar_toggle
+           MM--SS--bb               bar_toggle_ws
+           MM--xx                 wind_del
+           MM--SS--xx               wind_kill
+           MM--<_1_-_9_,_0_,_F_1_-_F_1_2>    ws_<_1_-_2_2>
+           MM--SS--<_1_-_9_,_0_,_F_1_-_F_1_2>  mvws_<_1_-_2_2>
+           MM--<_K_e_y_p_a_d _1_-_9>      rg_<_1_-_9>
+           MM--SS--<_K_e_y_p_a_d _1_-_9>    mvrg_<_1_-_9>
+           <_u_n_b_o_u_n_d>           mvrg_next
+           <_u_n_b_o_u_n_d>           mvrg_prev
+           <_u_n_b_o_u_n_d>           ws_empty
+           <_u_n_b_o_u_n_d>           ws_empty_move
+           MM--<RRiigghhtt>           ws_next
+           MM--<LLeefftt>            ws_prev
+           MM--<UUpp>              ws_next_all
+           MM--<DDoowwnn>            ws_prev_all
+           MM--aa                 ws_prior
+           MM--SS--<DDoowwnn>          ws_prev_move
+           MM--SS--<UUpp>            ws_next_move
+           MM--SS--<RRiigghhtt>         rg_next
+           MM--SS--<LLeefftt>          rg_prev
+           <_u_n_b_o_u_n_d>           rg_move_next
+           <_u_n_b_o_u_n_d>           rg_move_prev
+           MM--ss                 screenshot_all
+           MM--SS--ss               screenshot_wind
+           MM--SS--vv               version
+           MM--tt                 float_toggle
+           MM--SS--tt               below_toggle
+           MM--SS--``               free_toggle
+           MM--SS--<DDeelleettee>        lock
+           MM--SS--ii               initscr
+           MM--ww                 iconify
+           MM--SS--ww               uniconify
+           MM--ee                 maximize_toggle
+           MM--SS--ee               fullscreen_toggle
+           MM--rr                 raise
+           MM--SS--rr               always_raise
+           MM--vv                 button2
+           MM----                 width_shrink
+           MM--==                 width_grow
+           MM--SS----               height_shrink
+           MM--SS--==               height_grow
+           MM--[[                 move_left
+           MM--]]                 move_right
+           MM--SS--[[               move_up
+           MM--SS--]]               move_down
+           MM--SS--//               name_workspace
+           MM--//                 search_workspace
+           MM--ff                 search_win
+           MM--dd                 debug_toggle (debug mode only)
+           MM--SS--dd               dumpwins (debug mode only)
+
+     The action names and descriptions are listed below:
+
+           ffooccuuss               Focus window/region under pointer.
+           mmoovvee                Move window with pointer while binding is
+                               pressed.
+           rreessiizzee              Resize window with pointer while binding is
+                               pressed.
+           rreessiizzee__cceenntteerreedd     Same as rreessiizzee but keep window centered.
+           tteerrmm                Spawn a new terminal (see _P_R_O_G_R_A_M_S above).
+           mmeennuu                Menu (see _P_R_O_G_R_A_M_S above).
+           qquuiitt                Quit ssppeeccttrrwwmm.
+           rreessttaarrtt             Restart ssppeeccttrrwwmm.
+           rreessttaarrtt__ooff__ddaayy      Same as rreessttaarrtt but configuration file is
+                               loaded in full.
+           ccyyccllee__llaayyoouutt        Switch to the next layout.
+           fflliipp__llaayyoouutt         Swap the master and stacking areas.
+           pprriioorr__llaayyoouutt        Switch to the last used layout.
+           llaayyoouutt__vveerrttiiccaall     Switch to vertical layout.
+           llaayyoouutt__hhoorriizzoonnttaall   Switch to horizontal layout.
+           llaayyoouutt__mmaaxx          Switch to max layout.
+           llaayyoouutt__ffllooaattiinngg     Switch to floating layout.
+           ssttaacckk__rreesseett         Reset layout.
+           ssttaacckk__bbaallaannccee       Balance master/stacking area.
+           mmaasstteerr__sshhrriinnkk       Shrink master area.
+           mmaasstteerr__ggrrooww         Grow master area.
+           mmaasstteerr__aadddd          Add windows to master area.
+           mmaasstteerr__ddeell          Remove windows from master area.
+           ssttaacckk__iinncc           Add columns/rows to stacking area.
+           ssttaacckk__ddeecc           Remove columns/rows from stacking area.
+           sswwaapp__mmaaiinn           Move current window to master area.
+           ffooccuuss__nneexxtt          Focus next window in workspace.
+           ffooccuuss__pprreevv          Focus previous window in workspace.
+           ffooccuuss__mmaaiinn          Focus on main window in workspace.
+           ffooccuuss__pprriioorr         Focus last focused window in workspace.
+           ffooccuuss__ffrreeee          Focus on a window in free mode, if any.
+           ffooccuuss__uurrggeenntt        Focus on next window with the urgency hint flag
+                               set.  The workspace is switched if needed.
+           sswwaapp__nneexxtt           Swap with next window in workspace.
+           sswwaapp__pprreevv           Swap with previous window in workspace.
+           bbaarr__ttooggggllee          Toggle overall visibility of status bars.
+           bbaarr__ttooggggllee__wwss       Toggle status bar on current workspace.
+           wwiinndd__ddeell            Delete current window.
+           wwiinndd__kkiillll           Kill the program that created the current
+                               window.
+           wwss___n                Switch to workspace _n, where _n is 1 through
+                               wwoorrkkssppaaccee__lliimmiitt.
+           mmvvwwss___n              Move current window to workspace _n, where _n is
+                               1 through wwoorrkkssppaaccee__lliimmiitt.
+           rrgg___n                Focus on region _n, where _n is 1 through 9.
+           mmvvrrgg___n              Move current window to region _n, where _n is 1
+                               through 9.
+           mmvvrrgg__nneexxtt           Move current window to workspace in next
+                               region.
+           mmvvrrgg__pprreevv           Move current window to workspace in previous
+                               region.
+           wwss__eemmppttyy            Switch to the first empty workspace.
+           wwss__eemmppttyy__mmoovvee       Switch to the first empty workspace and move
+                               current window.
+           wwss__nneexxtt             Switch to next workspace with a window in it.
+           wwss__pprreevv             Switch to previous workspace with a window in
+                               it.
+           wwss__nneexxtt__aallll         Switch to next workspace.
+           wwss__pprreevv__aallll         Switch to previous workspace.
+           wwss__nneexxtt__mmoovvee        Switch to next workspace with the current
+                               window.
+           wwss__pprreevv__mmoovvee        Switch to previous workspace with the current
+                               window.
+           wwss__pprriioorr            Switch to last visited workspace.
+           rrgg__nneexxtt             Switch to next region.
+           rrgg__pprreevv             Switch to previous region.
+           rrgg__mmoovvee__nneexxtt        Switch to next region and move current
+                               workspace.
+           rrgg__mmoovvee__pprreevv        Switch to previous region and move current
+                               workspace.
+           ssccrreeeennsshhoott__aallll      Take screenshot of entire screen (if enabled)
+                               (see _P_R_O_G_R_A_M_S above).
+           ssccrreeeennsshhoott__wwiinndd     Take screenshot of selected window (if enabled)
+                               (see _P_R_O_G_R_A_M_S above).
+           vveerrssiioonn             Toggle version in status bar.
+           ffllooaatt__ttooggggllee        Toggle focused window between tiled and
+                               floating.
+           bbeellooww__ttooggggllee        Toggle bbeellooww state on current window.
+           ffrreeee__ttooggggllee         Toggle focused window between workspace mode
+                               and free mode.
+           lloocckk                Lock screen (see _P_R_O_G_R_A_M_S above).
+           iinniittssccrr             Reinitialize physical screens (see _P_R_O_G_R_A_M_S
+                               above).
+           iiccoonniiffyy             Minimize (unmap) currently focused window.
+           uunniiccoonniiffyy           Restore (map) window returned by dmenu(1)
+                               selection.
+           mmaaxxiimmiizzee__ttooggggllee     Toggle maximization of focused window.
+           ffuullllssccrreeeenn__ttooggggllee   Toggle fullscreen state of focused window.
+           rraaiissee               Raise the current window.
+           aallwwaayyss__rraaiissee        When set tiled windows are allowed to obscure
+                               floating windows.
+           bbuuttttoonn22             Fake a middle mouse button click (Button2).
+           wwiiddtthh__sshhrriinnkk        Shrink the width of a floating window.
+           wwiiddtthh__ggrrooww          Grow the width of a floating window.
+           hheeiigghhtt__sshhrriinnkk       Shrink the height of a floating window.
+           hheeiigghhtt__ggrrooww         Grow the height of a floating window.
+           mmoovvee__lleefftt           Move a floating window a step to the left.
+           mmoovvee__rriigghhtt          Move a floating window a step to the right.
+           mmoovvee__uupp             Move a floating window a step upwards.
+           mmoovvee__ddoowwnn           Move a floating window a step downwards.
+           nnaammee__wwoorrkkssppaaccee      Name the current workspace.
+           sseeaarrcchh__wwoorrkkssppaaccee    Search for a workspace.
+           sseeaarrcchh__wwiinn          Search the windows in the current workspace.
+           ddeebbuugg__ttooggggllee        Toggles debug overlay.  (debug mode only)
+           dduummppwwiinnss            Dump current window/focus/stacking state to
+                               debug log.  (debug mode only)
+
+     Custom bindings in the configuration file are specified as follows:
+
+           bind[_a_c_t_i_o_n] = _c_o_m_b_o
+
+     _a_c_t_i_o_n is one of the actions listed above (or empty to unbind) and _c_o_m_b_o
+     is in the form of zero or more modifier keys and/or special arguments
+     (Mod1, Shift, Control, MOD, etc.) and a normal key (b, Space, etc) or a
+     button (Button1 .. Button255), separated by `+'.  Multiple key/button
+     combinations may be bound to the same action.
+
+     Special arguments:
+           MMOODD         Substituted for the currently defined mmooddkkeeyy.
+           AANNYYMMOODD      Select all modifier combinations not handled by another
+                       binding.
+           RREEPPLLAAYY      Reprocess binding press/release events for other
+                       programs to handle.  Unavailable for mmoovvee, rreessiizzee and
+                       rreessiizzee__cceenntteerreedd.
+
+     MMOODD example:
+
+           bind[reset] = Mod4+q # bind Windows-key + q to reset
+           bind[] = Mod1+q # unbind Alt + q
+           bind[move] = MOD+Button3 # Bind move to M-Button3
+           bind[] = MOD+Button1 # Unbind default move binding.
+
+     AANNYYMMOODD example:
+
+           bind[focus] = ANYMOD+Button3
+           bind[move] = MOD+Button3
+
+     In the above example, MM--<BBuuttttoonn33> initiates mmoovvee and <BBuuttttoonn33> pressed
+     with any other combination of modifiers sets focus to the window/region
+     under the pointer.
+
+     RREEPPLLAAYY example:
+
+           bind[focus] = REPLAY+Button3
+
+     In the above example, when <BBuuttttoonn33> is pressed without any modifier(s),
+     focus is set to the window under the pointer and the button press is
+     passed to the window.
+
+     To bind non-latin characters such as oa or <pi> you must enter the xkb
+     character name instead of the character itself.  Run xev(1), focus the
+     window and press the specific key and in the terminal output read the
+     symbol name.  In the following example for oa:
+
+           KeyPress event, serial 41, synthetic NO, window 0x2600001,
+               root 0x15a, subw 0x0, time 106213808, (11,5), root:(359,823),
+               state 0x0, keycode 24 (keysym 0xe5, aring), same_screen YES,
+               XLookupString gives 2 bytes: (c3 a5) "oa"
+               XmbLookupString gives 2 bytes: (c3 a5) "oa"
+               XFilterEvent returns: False
+
+     The xkb name is aring.  In other words, in _s_p_e_c_t_r_w_m_._c_o_n_f add:
+
+           bind[program] = MOD+aring
+
+     To clear all default keyboard bindings and specify your own, see the
+     kkeeyybbooaarrdd__mmaappppiinngg option.
+
+KKEEYYBBOOAARRDD MMAAPPPPIINNGG FFIILLEESS
+     Keyboard mapping files for several keyboard layouts are listed below.
+     These files can be used with the kkeeyybbooaarrdd__mmaappppiinngg setting to load pre-
+     defined key bindings for the specified keyboard layout.
+
+           ssppeeccttrrwwmm__cczz..ccoonnff     Czech Republic keyboard layout
+           ssppeeccttrrwwmm__eess..ccoonnff     Spanish keyboard layout
+           ssppeeccttrrwwmm__ffrr..ccoonnff     French keyboard layout
+           ssppeeccttrrwwmm__ffrr__cchh..ccoonnff  Swiss French keyboard layout
+           ssppeeccttrrwwmm__ssee..ccoonnff     Swedish keyboard layout
+           ssppeeccttrrwwmm__uuss..ccoonnff     United States keyboard layout
+
+QQUUIIRRKKSS
+     ssppeeccttrrwwmm provides "quirks" which handle windows that must be treated
+     specially in a tiling window manager, such as some dialogs and fullscreen
+     apps.
+
+     The default quirks are described below:
+
+           Firefox-bin:firefox-bin                 TRANSSZ
+           Firefox:Dialog                          FLOAT
+           Gimp:gimp                               FLOAT + ANYWHERE
+           MPlayer:xv                              FLOAT + FULLSCREEN +
+                                                   FOCUSPREV
+           OpenOffice.org 2.4:VCLSalFrame          FLOAT
+           OpenOffice.org 3.1:VCLSalFrame          FLOAT
+           pcb:pcb                                 FLOAT
+           xine:Xine Window                        FLOAT + ANYWHERE
+           xine:xine Panel                         FLOAT + ANYWHERE
+           xine:xine Video Fullscreen Window       FULLSCREEN + FLOAT
+           Xitk:Xitk Combo                         FLOAT + ANYWHERE
+           Xitk:Xine Window                        FLOAT + ANYWHERE
+           XTerm:xterm                             XTERM_FONTADJ
+
+     The quirks themselves are described below:
+
+           ANYWHERE               Allow window to position itself, uncentered.
+           FLOAT                  This window should not be tiled, but allowed
+                                  to float freely.
+           FOCUSONMAP_SINGLE      When the window first appears on the screen,
+                                  change focus to the window if there are no
+                                  other windows on the workspace with the same
+                                  WM_CLASS class/instance value.  Has no
+                                  effect when ffooccuuss__mmooddee is set to _f_o_l_l_o_w.
+           FOCUSPREV              On exit force focus on previously focused
+                                  application not previous application in the
+                                  stack.
+           FULLSCREEN             Remove border to allow window to use full
+                                  region size.
+           IGNOREPID              Ignore the PID when determining the initial
+                                  workspace for a new window.  Especially
+                                  useful for terminal windows that share a
+                                  process.
+           IGNORESPAWNWS          Ignore the spawn workspace when determining
+                                  the initial workspace for a new window.
+           MINIMALBORDER          Remove border when window is unfocused and
+                                  floating.
+           NOFOCUSCYCLE           Remove from normal focus cycle (focus_prev
+                                  or focus_next). The window can still be
+                                  focused using search_win.
+           NOFOCUSONMAP           Do not change focus to the window when it
+                                  first appears on the screen.  Has no effect
+                                  when ffooccuuss__mmooddee is set to _f_o_l_l_o_w.
+           OBEYAPPFOCUSREQ        When an application requests focus on the
+                                  window via a _NET_ACTIVE_WINDOW client
+                                  message (source indication of 1), comply
+                                  with the request.  Note that a source
+                                  indication of 0 (unspecified) or 2 (pager)
+                                  are always obeyed.
+           TRANSSZ                Adjusts size on transient windows that are
+                                  too small using ddiiaalloogg__rraattiioo (see
+                                  _C_O_N_F_I_G_U_R_A_T_I_O_N _F_I_L_E_S).
+           WS[_n]                  Force a new window to appear on workspace _n.
+                                  Specify -1 to put the window into free mode
+                                  so that it is mapped independent of
+                                  workspaces and regions.
+           XTERM_FONTADJ          Adjust xterm(1) fonts when resizing.
+
+     Custom quirks in the configuration file are specified as follows:
+
+           quirk[_c_l_a_s_s[:_i_n_s_t_a_n_c_e[:_n_a_m_e]]] = _q_u_i_r_k [+ _q_u_i_r_k _._._.]
+
+     _c_l_a_s_s, _i_n_s_t_a_n_c_e (optional) and _n_a_m_e (optional) are patterns used to
+     determine which window(s) the quirk(s) apply to and _q_u_i_r_k is one of the
+     quirks from the list above.
+
+     Note that patterns are interpreted as POSIX Extended Regular Expressions.
+     Any ':', '[' or ']' must be escaped with '\'.  See regex(7) for more
+     information on POSIX Extended Regular Expressions.
+
+     For example:
+
+           quirk[MPlayer] = FLOAT + FULLSCREEN + FOCUSPREV # Float all windows having a class of 'MPlayer'
+           quirk[.*] = FLOAT # Float all windows by default.
+           quirk[.*:.*:.*] = FLOAT # Same as above.
+           quirk[Firefox:Navigator] = FLOAT # Float all Firefox browser windows.
+           quirk[::Console] = FLOAT # Float windows with WM_CLASS not set and a window name of 'Console'.
+           quirk[\[0-9\].*:.*:\[\[\:alnum\:\]\]*] = FLOAT # Float windows with WM_CLASS class beginning with a number, any WM_CLASS instance and a _NET_WM_NAME/WM_NAME either blank or containing alphanumeric characters without spaces.
+           quirk[pcb:pcb] = NONE # remove existing quirk
+
+     You can obtain _c_l_a_s_s, _i_n_s_t_a_n_c_e and _n_a_m_e by running xprop(1) and then
+     clicking on the desired window.  In the following example the main window
+     of Firefox was clicked:
+
+           $ xprop | grep -E "^(WM_CLASS|_NET_WM_NAME|WM_NAME)"
+           WM_CLASS(STRING) = "Navigator", "Firefox"
+           WM_NAME(STRING) = "spectrwm - ConformalOpenSource"
+           _NET_WM_NAME(UTF8_STRING) = "spectrwm - ConformalOpenSource"
+
+     Note that xprop(1) displays WM_CLASS as:
+
+           WM_CLASS(STRING) = "<instance>", "<class>"
+
+     In the example above the quirk entry would be:
+
+           quirk[Firefox:Navigator] = FLOAT
+
+     ssppeeccttrrwwmm also automatically assigns quirks to windows based on the value
+     of the window's _NET_WM_WINDOW_TYPE property as follows:
+
+           _NET_WM_WINDOW_TYPE_TOOLBAR          FLOAT + ANYWHERE
+           _NET_WM_WINDOW_TYPE_UTILITY          FLOAT + ANYWHERE
+           _NET_WM_WINDOW_TYPE_SPLASH           FLOAT
+           _NET_WM_WINDOW_TYPE_DIALOG           FLOAT
+
+     In all other cases, no automatic quirks are assigned to the window.
+     Quirks specified in the configuration file override the automatic quirks.
+
+EEWWMMHH
+     ssppeeccttrrwwmm partially implements the Extended Window Manager Hints (EWMH)
+     specification.  This enables controlling windows as well as ssppeeccttrrwwmm
+     itself from external scripts and programs.  This is achieved by ssppeeccttrrwwmm
+     responding to certain ClientMessage events.  From the terminal these
+     events can be conveniently sent using tools such as wmctrl(1) and
+     xdotool(1).  For the actual format of these ClientMessage events, see the
+     EWMH specification.
+
+     The id of the currently focused window is stored in the
+     _NET_ACTIVE_WINDOW property of the root window.  This can be used for
+     example to retrieve the title of the currently active window with
+     xprop(1) and grep(1):
+
+           $ WINDOWID=`xprop -root _NET_ACTIVE_WINDOW | grep -o "0x.*"`
+           $ xprop -id $WINDOWID _NET_WM_NAME | grep -o "\".*\""
+
+     A window can be focused by sending a _NET_ACTIVE_WINDOW client message to
+     the root window.  For example, using wmctrl(1) to send the message
+     (assuming 0x4a0000b is the id of the window to be focused):
+
+           $ wmctrl -i -a 0x4a0000b
+
+     Windows can be closed by sending a _NET_CLOSE_WINDOW client message to
+     the root window.  For example, using wmctrl(1) to send the message
+     (assuming 0x4a0000b is the id of the window to be closed):
+
+           $ wmctrl -i -c 0x4a0000b
+
+     Windows can be floated and un-floated by adding or removing the
+     _NET_WM_STATE_ABOVE atom from the _NET_WM_STATE property of the window.
+     This can be achieved by sending a _NET_WM_STATE client message to the
+     root window.  For example, the following toggles the floating state of a
+     window using wmctrl(1) to send the message (assuming 0x4a0000b is the id
+     of the window to be floated or un-floated):
+
+           $ wmctrl -i -r 0x4a0000b -b toggle,above
+
+     Windows can also be iconified and un-iconified by substituting
+     _NET_WM_STATE_HIDDEN for _NET_WM_STATE_ABOVE in the previous example:
+
+           $ wmctrl -i -r 0x4a0000b -b toggle,hidden
+
+     Floating windows can also be resized and moved by sending a
+     _NET_MOVERESIZE_WINDOW client message to the root window.  For example,
+     using wmctrl(1) to send the message (assuming 0x4a0000b is the id of the
+     window to be resize/moved):
+
+           $ wmctrl -i -r 0x4a0000b -e 0,100,50,640,480
+
+     This moves the window to (100,50) and resizes it to 640x480.
+
+     Any _NET_MOVERESIZE_WINDOW events received for stacked windows are
+     ignored.
+
+SSWWMMHHAACCKK
+     When spawning a program via aauuttoorruunn or a binding, ssppeeccttrrwwmm aims to place
+     the program's windows (if any) in its spawn workspace.  To accomplish
+     this "spawn-in-workspace" behavior, ssppeeccttrrwwmm must determine the intended
+     spawn workspace when managing a new window.  Since it cannot be done with
+     X11 alone, _l_i_b_s_w_m_h_a_c_k_._s_o is included to make this feature possible.
+
+     When a program is spawned, ssppeeccttrrwwmm automatically sets _L_D___P_R_E_L_O_A_D and
+     ___S_W_M___W_S in the program's spawn environment to enable _l_i_b_s_w_m_h_a_c_k_._s_o when
+     it is executed.  Note that _L_D___P_R_E_L_O_A_D is the path to _l_i_b_s_w_m_h_a_c_k_._s_o and
+     ___S_W_M___W_S is the spawn workspace for any windows created by the program.
+
+     When running programs from terminals, scripts, etc, the inherited
+     environment may need to be configured.  It is possible to override the
+     spawn workspace by setting ___S_W_M___W_S to a different value.  Alternatively,
+     ___S_W_M___W_S can be unset(1) or set to a blank value to disable "spawn-in-
+     workspace" behavior.  Note that workspaces are counted from 0.  `-1' can
+     be specified to put windows into workspace-free mode.
+
+     For example, to play a video with mpv(1) on workspace 10 without changing
+     the spawn workspace in the environment:
+
+           $ _SWM_WS=9 mpv video.mkv
+
+     Play the video in free mode so that it remains mapped when switching
+     workspaces.
+
+           $ _SWM_WS=-1 mpv video.mkv
+
+     Disable "spawn-in-workspace" in the environment so that new windows map
+     on whichever workspace happens to be focused.
+
+           $ unset _SWM_WS
+
+     Change the environment to spawn programs in free mode.
+
+           $ export _SWM_WS=-1
+
+     When spawning a program that creates windows via a daemon, ensure the
+     daemon is started with the correct _L_D___P_R_E_L_O_A_D in its environment.
+
+     For example, when starting urxvtd(1) via xinit(1), _L_D___P_R_E_L_O_A_D must be
+     specified.
+
+           LD_PRELOAD=/usr/lib/libswmhack.so.0.0 urxvtd -q -o -f
+
+     Note that some operating systems may ignore _L_D___P_R_E_L_O_A_D if certain
+     conditions are not met.  It is advised to check the man page of _l_d_._s_o.
+
+     In situations where _l_i_b_s_w_m_h_a_c_k_._s_o cannot be used, it is possible to use a
+     quirk to spawn a program in a specific workspace.
+
+     e.g. launch an xterm(1) in workspace 2 on startup:
+
+           autorun = ws[2]:xterm -name ws2
+           quirk[XTerm:ws2] = WS[2]
+
+     Note that XCB programs are currently unsupported by _l_i_b_s_w_m_h_a_c_k_._s_o.
+
+SSIIGGNNAALLSS
+     Sending ssppeeccttrrwwmm a HUP signal will restart it.
+
+FFIILLEESS
+     _~_/_._s_p_e_c_t_r_w_m_._c_o_n_f       ssppeeccttrrwwmm user specific settings.
+     _/_e_t_c_/_s_p_e_c_t_r_w_m_._c_o_n_f     ssppeeccttrrwwmm global settings.
+
+HHIISSTTOORRYY
+     ssppeeccttrrwwmm was inspired by xmonad & dwm.
+
+AAUUTTHHOORRSS
+     ssppeeccttrrwwmm was written by:
+
+           Marco Peereboom <_m_a_r_c_o_@_p_e_e_r_e_b_o_o_m_._u_s>
+           Ryan Thomas McBride <_m_c_b_r_i_d_e_@_c_o_u_n_t_e_r_s_i_e_g_e_._c_o_m>
+           Darrin Chandler <_d_w_c_h_a_n_d_l_e_r_@_s_t_i_l_y_a_g_i_n_._c_o_m>
+           Pierre-Yves Ritschard <_p_y_r_@_s_p_o_o_t_n_i_k_._o_r_g>
+           Tuukka Kataja <_s_t_u_g_e_@_x_o_r_._f_i>
+           Jason L. Wright <_j_a_s_o_n_@_t_h_o_u_g_h_t_._n_e_t>
+           Reginald Kennedy <_r_k_@_r_e_j_i_i_._c_o_m>
+           Lawrence Teo <_l_t_e_o_@_l_t_e_o_._n_e_t>
+           Tiago Cunha <_t_c_u_n_h_a_@_g_m_x_._c_o_m>
+           David Hill <_d_h_i_l_l_@_m_i_n_d_c_r_y_._o_r_g>
+
+Linux 6.7.3-0-edge             November 25, 2023            Linux 6.7.3-0-edge

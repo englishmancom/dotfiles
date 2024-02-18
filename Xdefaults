@@ -1,0 +1,32 @@
+!! Transparency (0-1):
+st.alpha: 0.92
+st.alphaOffset: 0.3
+
+!! Set a default font and font size as below:
+st.font: FiraCode Nerd Font Mono Ret:size=10
+
+! st.termname: st-256color
+! st.borderpx: 2
+
+!! Set the background, foreground and cursor colors as below:
+
+!! Colors of Englishman:
+*.color0: #000000
+*.color1: #0000ff
+*.color2: #00ff00
+*.color3: #00ffff
+*.color4: #ff0000
+*.color5: #ff00ff
+*.color6: #ffff00
+*.color7: #ffffff
+*.color8: #000040
+*.color9: #000080
+*.color10: #008000
+*.color11: #008080
+*.color12: #800000
+*.color13: #800080
+*.color14: #808000
+*.color15: #808080
+*.background: black
+*.foreground: white
+*.cursorColor: white
