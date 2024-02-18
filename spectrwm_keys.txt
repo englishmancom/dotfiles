@@ -1,86 +1,106 @@
- The default bindings are listed below:
- 
-<Button1>    focus
-M-<Button1>    move
-M-<Button3>    resize
-M-S-<Button3>    resize_centered
-M-S-<Return>    term
-M-p    menu
-M-S-q    quit
-M-q    restart
-<unbound>    restart_of_day
-M-<Space>    cycle_layout
-M-S-\    flip_layout
-<unbound>    prior_layout
-<unbound>    layout_vertical
-<unbound>    layout_horizontal
-<unbound>    layout_max
-<unbound>    layout_floating
-M-S-<Space>    stack_reset
-<unbound>    stack_balance
-M-h    master_shrink
-M-l    master_grow
-M-,    master_add
-M-.    master_del
-M-S-,    stack_inc
-M-S-.    stack_dec
-M-<Return>    swap_main
-M-j, M-<TAB>    focus_next
-M-k, M-S-<TAB>   focus_prev
-M-m    focus_main
-M-`    focus_free
-M-S-a    focus_prior
-M-u    focus_urgent
-M-S-j    swap_next
-M-S-k    swap_prev:w
-M-b    bar_toggle
-M-S-b    bar_toggle_ws
-M-x    wind_del
-M-S-x    wind_kill
-M-<1-9,0,F1-F12>  ws_<1-22>
-M-S-<1-9,0,F1-F12> mvws_<1-22>
-M-<Keypad 1-9>   rg_<1-9>
-M-S-<Keypad 1-9>  mvrg_<1-9>
-<unbound>    mvrg_next
-<unbound>    mvrg_prev
-<unbound>    ws_empty
-<unbound>    ws_empty_move
-M-<Right>    ws_next
-M-<Left>    ws_prev
-M-<Up>    ws_next_all
-M-<Down>    ws_prev_all
-M-a    ws_prior
-M-S-<Down>    ws_prev_move
-M-S-<Up>    ws_next_move
-M-S-<Right>    rg_next
-M-S-<Left>    rg_prev
-<unbound>    rg_move_next
-<unbound>    rg_move_prev
-M-s    screenshot_all
-M-S-s    screenshot_wind
-M-S-v    version
-M-t    float_toggle
-M-S-t    below_toggle
-M-S-`    free_toggle
-M-S-<Delete>    lock
-M-S-i    initscr
-M-w    iconify
-M-S-w    uniconify
-M-e    maximize_toggle
-M-S-e    fullscreen_toggle
-M-r    raise
-M-S-r    always_raise
-M-v    button2
-M--    width_shrink
-M-=    width_grow
-M-S--    height_shrink
-M-S-=    height_grow
-M-[    move_left
-M-]    move_right
-M-S-[    move_up
-M-S-]    move_down
-M-S-/    name_workspace
-M-/    search_workspace
-M-f    search_win
-M-d    debug_toggle (debug mode only)
-aaaaaaaaasaaaaaaa-S-d    dumpwins (debug mode only)
+<Button1>			focus
+M-<Button1>			move
+M-<Button3>			resize
+M-S-<Button3>			resize_centered
+M-S-<Return>			term
+M-p			menu
+M-S-q			quit
+M-q			restart
+<unbound>			restart_of_day
+M-<Space>			cycle_layout
+M-S-\			flip_layout
+<unbound>			prior_layout
+<unbound>			layout_vertical
+<unbound>			layout_horizontal
+<unbound>			layout_max
+<unbound>			layout_floating
+M-S-<Space>			stack_reset
+<unbound>			stack_balance
+M-h			master_shrink
+M-l			master_grow
+M-,			master_add
+M-.			master_del
+M-S-,			stack_inc
+M-S-.			stack_dec
+M-<Return>			swap_main
+M-j,			M-<TAB> focus_next
+M-k,			M-S-<TAB> focus_prev
+M-m			focus_main
+M-`			focus_free
+M-S-a			focus_prior
+M-u			focus_urgent
+
+M-S-j			swap_next
+M-S-k			swap_prev
+
+M-b			bar_toggle
+M-S-b			bar_toggle_ws
+
+M-x			wind_del
+M-S-x			wind_kill
+
+M-<1-9,0,F1-F12>	ws_<1-22>
+M-S-<1-9,0,F1-F12>	mvws_<1-22>
+
+M-<Keypad1-9>		rg_<1-9>
+
+M-S-<Keypad1-9>		mvrg_<1-9>
+<unbound>		mvrg_next
+<unbound>		mvrg_prev
+
+<unbound>		ws_empty
+<unbound>		ws_empty_move
+M-<Right>		ws_next
+M-<Left>		ws_prev
+M-<Up>			ws_next_all
+M-<Down>		ws_prev_all
+M-a			ws_prior
+M-S-<Down>		ws_prev_move
+M-S-<Up>		ws_next_move
+
+M-S-<Right>		rg_next
+M-S-<Left>		rg_prev
+<unbound>		rg_move_next
+<unbound>		rg_move_prev
+
+M-s			screenshot_all
+M-S-s			screenshot_wind
+
+M-S-v			version
+
+M-t			float_toggle
+M-S-t			below_toggle
+M-S-`			free_toggle
+
+M-S-<Delete>		lock
+
+M-S-i			initscr
+
+M-w			iconify
+
+M-S-w			uniconify
+
+M-e			maximize_toggle
+
+M-S-e			fullscreen_toggle
+
+M-r			raise
+
+M-S-r			always_raise
+
+M-v			button2
+
+M--			width_shrink
+M-=			width_grow
+
+M-S--			height_shrink
+M-S-=			height_grow
+
+M-[			move_left
+M-]			move_right
+M-S-[			move_up
+M-S-]			move_down
+M-S-/			name_workspace
+
+M-/			search_workspace
+M-f			search_win
